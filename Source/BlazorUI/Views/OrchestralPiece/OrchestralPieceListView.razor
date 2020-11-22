@@ -1,0 +1,43 @@
+﻿@page "/orchestralbriefcase/{Id:int}"
+
+@inject NavigationManager NavManager
+@inject IOrchestralPieceViewModel OrchPieceViewModel
+
+
+<div class="container">
+    <h2 class="mb-4">@OrchPieceViewModel.OrchestralBriefcaseName</h2>
+    <CascadingValue Value="OrchPieceViewModel">
+        <OrchestralControls OrchestralBriefcaseDeleteCallback="DeleteOrchestralBriefcase"
+                            Id="Id" />
+        <hr />
+
+        <OrchestralPieceList OrchestralBriefcaseId="Id" />
+    </CascadingValue>
+</div>
+
+@code{
+    private bool _wasDeleted;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    [CascadingParameter]
+    public IOrchestralBriefcaseViewModel OrchBriefcaseViewModel { get; set; }
+
+    private async Task DeleteOrchestralBriefcase()
+    {
+        await OrchBriefcaseViewModel.DeleteAsync(Id);
+        _wasDeleted = true;
+        await OrchBriefcaseViewModel.GetAllAsync();
+        NavManager.NavigateTo("/");
+        _wasDeleted = false;
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (_wasDeleted == false)
+        {
+            await OrchPieceViewModel.GetAllForBriefcase(Id);
+        }
+    }
+}

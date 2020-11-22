@@ -1,0 +1,48 @@
+﻿@page "/orchestralpiece/edit/{Id:int}"
+
+@inject NavigationManager NavManager
+@inject IOrchestralPieceViewModel ViewModel
+
+<div class="pl-3">
+    <h2>Edytuj utwór</h2>
+    <hr />
+</div>
+
+<div class="col-10 col-sm-7">
+    <OrchestralPieceForm ButtonText="Zapisz"
+                            Model="ViewModel.OrchestralPiece"
+                            OnValidSubmitCallback="HandleValidSubmit"
+                            OnAbortCallback="HandleAbort" />
+    @if (_message != null)
+    {
+        <div class="mt-5">
+            <span class="alert alert-success text-center">@_message</span>
+        </div>
+    }
+</div>
+
+
+
+@code {
+    private string _message;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.GetById(Id);
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await ViewModel.UpdateAsync();
+        _message = "Utwór został zaktualizowany";
+    }
+
+    private void HandleAbort()
+    {
+        NavManager.NavigateTo(
+            $"orchestralbriefcase/{ViewModel.OrchestralPiece.OrchestralBriefcaseId}");
+    }
+}

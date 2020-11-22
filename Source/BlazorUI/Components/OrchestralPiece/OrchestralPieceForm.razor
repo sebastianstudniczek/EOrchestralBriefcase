@@ -1,0 +1,52 @@
+﻿<EditForm Model="Model" OnValidSubmit="@OnValidSubmitCallback">
+    <FluentValidationValidator />
+    <CustomInputText @bind-Value="@Model.Title"
+                     ValidationFor="@(() => Model.Title)" />
+
+    <CustomInputText @bind-Value="@Model.Composer"
+                     ValidationFor="(() => Model.Composer)" />
+
+    <div class="form-group">
+        <Label For="@(() => Model.Tempo)"></Label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@Model.Tempo" />
+            <ValidationMessage For="@(() => Model.Tempo)" />
+        </div>
+    </div>
+    <CustomInputText @bind-Value="@Model.SongLink"
+                     ValidationFor="(() => Model.SongLink)" />
+    <div class="form-group">
+        <Label For="@(() => Model.NumberInBriefcase)"></Label>
+        <div>
+            <InputNumber class="form-control" @bind-Value="@Model.NumberInBriefcase" />
+            <ValidationMessage For="@(() => Model.NumberInBriefcase)" />
+        </div>
+    </div>
+    <div class="form-group">
+        <input @bind="@Model.Id" type="hidden" />
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary mr-3">
+            @ButtonText
+        </button>
+        <a class="btn btn-danger text-white" @onclick="OnAbortCallback">
+            Anuluj
+        </a>
+    </div>
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public OrchestralPieceVm Model { get; set; }
+
+    [Parameter]
+    public string ButtonText { get; set; }
+
+    [Parameter]
+    public EventCallback OnValidSubmitCallback { get; set; }
+
+    [Parameter]
+    public EventCallback OnAbortCallback { get; set; }
+}

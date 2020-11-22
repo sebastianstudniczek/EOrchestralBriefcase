@@ -1,0 +1,19 @@
+﻿@if (OrchestralBriefcases != null)
+{
+    <ul class="nav flex-column">
+        @foreach (var orchBriefcase in OrchestralBriefcases)
+        {
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="@($"orchestralbriefcase/{orchBriefcase.Id}")" Match="NavLinkMatch.All">
+                    <span class="oi oi-list-rich"></span>@orchBriefcase.Name
+                </NavLink>
+            </li>
+        }
+    </ul>
+}
+
+@code{
+    [Parameter]
+    public IEnumerable<OrchestralBriefcaseVm> OrchestralBriefcases { get; set; }
+}
+

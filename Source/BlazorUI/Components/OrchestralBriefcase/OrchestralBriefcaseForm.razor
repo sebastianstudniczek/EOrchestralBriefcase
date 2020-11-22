@@ -1,0 +1,28 @@
+﻿<EditForm Model="@Model" OnValidSubmit="@OnValidSubmitCallback">
+    <FluentValidationValidator />
+    <CustomInputText @bind-Value="Model.Name"
+                     ValidationFor="@(() => Model.Name)" />
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary mr-3">
+            @ButtonText
+        </button>
+        <a class="btn btn-danger text-white" @onclick="OnAbortCallback">
+            Anuluj
+        </a>
+    </div>
+</EditForm>
+
+
+@code{
+    [Parameter]
+    public OrchestralBriefcaseVm Model { get; set; }
+
+    [Parameter]
+    public string ButtonText { get; set; }
+
+    [Parameter]
+    public EventCallback OnValidSubmitCallback { get; set; }
+
+    [Parameter]
+    public EventCallback OnAbortCallback { get; set; }
+}

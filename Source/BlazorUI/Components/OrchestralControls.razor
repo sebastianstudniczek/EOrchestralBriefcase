@@ -1,0 +1,26 @@
+﻿<div class="row justify-content-between pl-3 pr-3">
+    <div class="justify-content-start">
+        <a class="btn btn-info flex-grow-1 flex-sm-grow-0"
+            href="@($"orchestralpiece/create/{Id}")">
+            Dodaj utwór
+        </a>
+    </div>
+    <div class="align-items-end">
+        <a class="btn btn-warning mr-2 mr-sm-4
+        flex-grow-1 flex-md-grow-0" href="@($"orchestralbriefcase/edit/{Id}")">
+            Edytuj teczkę
+        </a>
+        <button @onclick="OrchestralBriefcaseDeleteCallback" class="btn btn-danger">
+            Usuń teczkę
+        </button>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    [Parameter]
+    public EventCallback OrchestralBriefcaseDeleteCallback { get; set; }
+}

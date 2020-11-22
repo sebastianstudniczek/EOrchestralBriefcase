@@ -1,0 +1,42 @@
+﻿@page "/orchestralbriefcase/create"
+
+@inject NavigationManager NavManager
+
+<div class="pl-3">
+    <h2>Dodaj teczkę</h2>
+    <hr />
+</div>
+
+<div class="col-10 col-sm-6">
+    <OrchestralBriefcaseForm ButtonText="Utwórz"
+                             Model="ViewModel.OrchestralBriefcase"
+                             OnValidSubmitCallback="HandleValidSubmit"
+                             OnAbortCallback="HandleAbort"/>
+    @if (_message != null)
+    {
+        <div class="mt-5">
+            <span class="alert alert-success text-center">@_message</span>
+        </div>
+    }
+</div>
+
+@code{
+    [CascadingParameter]
+    public IOrchestralBriefcaseViewModel ViewModel { get; set; }
+
+    private string _message;
+
+    private async Task HandleValidSubmit()
+    {
+        await ViewModel.CreateAsync();
+        _message = "Teczka została dodana.";
+        await ViewModel.GetAllAsync();
+
+    }
+
+    private void HandleAbort()
+    {
+        NavManager.NavigateTo("/");
+    }
+}
+

@@ -1,0 +1,42 @@
+﻿@page "/orchestralpiece/create/{OrchBriefcaseId:int}"
+
+@inject IOrchestralPieceViewModel ViewModel
+@inject NavigationManager NavManager
+
+<div class="pl-3">
+    <h2>Dodaj utwór</h2>
+    <hr />
+</div>
+
+<div class="col-10 col-sm-7">
+    <OrchestralPieceForm ButtonText="Utwórz"
+                         Model="ViewModel.OrchestralPiece"
+                         OnValidSubmitCallback="HandleValidSubmit"
+                         OnAbortCallback="HandleAbort"/>
+    @if (_message != null)
+    {
+        <div class="mt-5">
+            <span class="alert alert-success text-center">@_message</span>
+        </div>
+    }
+</div>
+
+@code{
+    private string _message;
+
+    [Parameter]
+    public int OrchBriefcaseId { get; set; }
+
+    private async Task HandleValidSubmit()
+    {
+        ViewModel.OrchestralPiece.OrchestralBriefcaseId = OrchBriefcaseId;
+        await ViewModel.CreateAsync();
+        _message = "Utwór został dodany.";
+    }
+
+    private void HandleAbort()
+    {
+        NavManager.NavigateTo($"orchestralbriefcase/{OrchBriefcaseId}");
+    }
+
+}

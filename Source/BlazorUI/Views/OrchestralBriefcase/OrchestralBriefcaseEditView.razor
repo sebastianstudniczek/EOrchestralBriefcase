@@ -1,0 +1,49 @@
+﻿@page "/orchestralbriefcase/edit/{Id:int}"
+
+@inject NavigationManager NavManager
+
+<div class="pl-3">
+    <h2>Edytuj teczkę</h2>
+    <hr />
+</div>
+
+<div class="col-10 col-sm-6">
+    <OrchestralBriefcaseForm ButtonText="Zapisz"
+                             Model="ViewModel.OrchestralBriefcase"
+                             OnValidSubmitCallback="HandleValidSubmit"
+                             OnAbortCallback="HandleAbort" />
+    @if (_message != null)
+    {
+        <div class="mt-5">
+            <span class="alert alert-success text-center">@_message</span>
+        </div>
+    }
+</div>
+
+@code {
+    [CascadingParameter]
+    public IOrchestralBriefcaseViewModel ViewModel { get; set; }
+
+    private string _message;
+
+    [Parameter]
+    public int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ViewModel.GetByIdAsync(Id);
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        await ViewModel.UpdateAsync();
+        _message = "Utwór został zaktualizowany.";
+        await ViewModel.GetAllAsync();
+        NavManager.NavigateTo($"orchestralbriefcase/{Id}");
+    }
+
+    private void HandleAbort()
+    {
+        NavManager.NavigateTo($"orchestralbriefcase/{Id}");
+    }
+}

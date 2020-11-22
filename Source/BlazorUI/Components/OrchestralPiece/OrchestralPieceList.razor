@@ -1,0 +1,53 @@
+﻿@using EOrchestralBriefcase.BlazorUI.ViewModels.OrchestralPiece
+
+@if (ViewModel.OrchestralPieces == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    foreach (var orchestralPiece in ViewModel.OrchestralPieces)
+    {
+        <div class="row mb-3 pl-3">
+            <div class="card border-primary bg-light col-8 col-sm-9 col-lg-10">
+                <h5 class="pt-2">
+                    @orchestralPiece.NumberInBriefcase
+                    <a class="card-link">
+                        @orchestralPiece.Title
+                    </a>
+                </h5>
+                <div class="card-text">
+                    Kompozytor: @(orchestralPiece.Composer ?? "brak")
+                </div>
+            </div>
+            <div class="col-4 col-sm-3 col-lg-2">
+                <a class="btn btn-warning w-100 mb-1"
+                   href="@($"orchestralpiece/edit/{orchestralPiece.Id}")">
+                    Edytuj
+                </a>
+                <button class="btn btn-danger w-100"
+                        @onclick="@(e => Delete(orchestralPiece.Id))">
+                    Usuń
+                </button>
+            </div>
+        </div>
+    }
+}
+
+
+@code {
+    [CascadingParameter]
+    public IOrchestralPieceViewModel ViewModel { get; set; }
+
+    [Parameter]
+    public IEnumerable<OrchestralPieceVm> OrchestralPieces { get; set; }
+
+    [Parameter]
+    public int OrchestralBriefcaseId { get; set; }
+
+    private async Task Delete(int id)
+    {
+        await ViewModel.DeleteAsync(id);
+        await ViewModel.GetAllForBriefcase(OrchestralBriefcaseId);
+    }
+}

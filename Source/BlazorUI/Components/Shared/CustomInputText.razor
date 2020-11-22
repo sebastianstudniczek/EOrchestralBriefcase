@@ -1,0 +1,24 @@
+﻿@using System.Linq.Expressions
+@using System.ComponentModel
+@using System.Reflection
+@inherits InputBase<string>
+
+
+<div class="form-group">
+    <Label For="@ValidationFor"/>
+    <input type="text" class="form-control" @bind="@CurrentValue" />
+    <ValidationMessage For="@ValidationFor" />
+</div>
+
+
+@code{
+    [Parameter]
+    public Expression<Func<string>> ValidationFor { get; set; }
+
+    protected override bool TryParseValueFromString(string value, out string result, out string validationErrorMessage)
+    {
+        result = value;
+        validationErrorMessage = null;
+        return true;
+    }
+}

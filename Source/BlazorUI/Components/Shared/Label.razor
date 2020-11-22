@@ -1,0 +1,24 @@
+﻿@using System.Reflection
+@using System.ComponentModel
+@using System.Linq.Expressions
+
+@typeparam TItem
+
+<label @attributes="AdditionalAttributes">@label</label>
+
+@code {
+    [Parameter]
+    public Expression<Func<TItem>> For { get; set; }
+
+    [Parameter(CaptureUnmatchedValues = true)]
+    public IDictionary<string, object> AdditionalAttributes { get; set; }
+
+    private string label => GetDisplayName();
+
+    private string GetDisplayName()
+    {
+        var expression = (MemberExpression)For.Body;
+        var value = expression.Member.GetCustomAttribute(typeof(DisplayNameAttribute)) as DisplayNameAttribute;
+        return value?.DisplayName ?? expression.Member.Name ?? "";
+    }
+}

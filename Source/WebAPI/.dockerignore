@@ -1,0 +1,13 @@
+﻿**/.vs
+**/.vscode
+**/.classpath
+**/.dockerignore
+**/.env
+**/.git
+**/.gitignore
+**/.project
+**/.settings
+**/bin
+**/obj
+**/Dockerfile*
+README.md
