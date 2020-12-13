@@ -9,10 +9,10 @@ namespace EOrchestralBriefcase.Infrastructure.Persistance.Configurations
         public void Configure(EntityTypeBuilder<OrchestralBriefcaseOrchestralPiece> builder)
         {
             builder
-                .HasKey(k => new { k.OrchestralBriefcaseId, k.OrchestralPieceId });
+                .HasKey(key => new { key.OrchestralBriefcaseId, key.OrchestralPieceId });
 
-            builder.
-                Property(p => p.NumberInBriefcase)
+            builder
+                .Property(property => property.NumberInBriefcase)
                 .IsRequired();
         }
     }

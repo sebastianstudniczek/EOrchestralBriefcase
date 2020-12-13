@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-
 using EOrchestralBriefcase.Domain.Entities;
 using EOrchestralBriefcase.Infrastructure.Persistance;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace EOrchestralBriefcase.Tests.Application.UnitTests.Helper

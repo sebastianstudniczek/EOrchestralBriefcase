@@ -23,7 +23,7 @@ namespace EOrchestralBriefcase.BlazorUI.ViewModels.OrchestralPiece
         public OrchestralPieceVm OrchestralPiece { get; set; }
         private OrchestralBriefcaseVm _orchestralBriefcase;
 
-        public async Task GetById(int id)
+        public async Task GetByIdAsync(int id)
         {
             OrchestralPiece = await _apiClient.GetFromJsonAsync<OrchestralPieceVm>($"{_baseWebApiCall}/{id}");
         }

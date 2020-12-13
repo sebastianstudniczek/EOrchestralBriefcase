@@ -1,9 +1,7 @@
 ﻿using System.Reflection;
 using System.Threading.Tasks;
-
 using EOrchestralBriefcase.Application.Interfaces;
 using EOrchestralBriefcase.Domain.Entities;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace EOrchestralBriefcase.Infrastructure.Persistance

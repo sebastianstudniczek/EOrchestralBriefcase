@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel;
-
 using AutoMapper;
-
 using EOrchestralBriefcase.Application.Dtos;
 using EOrchestralBriefcase.Application.Mappings;
 

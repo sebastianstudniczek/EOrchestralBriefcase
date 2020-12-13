@@ -1,10 +1,8 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 using EOrchestralBriefcase.BlazorUI.ViewModels.OrchestralBriefcase;
 using EOrchestralBriefcase.BlazorUI.ViewModels.OrchestralPiece;
-
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

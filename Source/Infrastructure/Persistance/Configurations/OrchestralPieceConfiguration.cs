@@ -1,7 +1,6 @@
 ﻿using EOrchestralBriefcase.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 
 namespace EOrchestralBriefcase.Infrastructure.Persistance.Configurations
 {
@@ -9,18 +8,23 @@ namespace EOrchestralBriefcase.Infrastructure.Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<OrchestralPiece> builder)
         {
-            builder.Property(p => p.Id).HasColumnName("OrchestralPieceID");
+            builder
+                .Property(property => property.Id)
+                .HasColumnName("OrchestralPieceID");
 
-            builder.Property(p => p.Title)
+            builder
+                .Property(property => property.Title)
                 .HasMaxLength(80)
                 .IsUnicode()
                 .IsRequired();
 
-            builder.Property(p => p.Composer)
+            builder
+                .Property(property => property.Composer)
                 .HasMaxLength(80)
                 .IsUnicode();
 
-            builder.Property(p => p.SongLink)
+            builder
+                .Property(property => property.SongLink)
                 .HasMaxLength(80)
                 .IsUnicode(false);
         }

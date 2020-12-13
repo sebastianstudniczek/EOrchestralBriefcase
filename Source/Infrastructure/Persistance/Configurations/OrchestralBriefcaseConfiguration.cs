@@ -8,9 +8,12 @@ namespace EOrchestralBriefcase.Infrastructure.Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<OrchestralBriefcase> builder)
         {
-            builder.Property(p => p.Id).HasColumnName("OrchestralBriefcaseID");
+            builder
+                .Property(property => property.Id)
+                .HasColumnName("OrchestralBriefcaseID");
 
-            builder.Property(p => p.Name)
+            builder
+                .Property(property => property.Name)
                 .HasMaxLength(80)
                 .IsUnicode()
                 .IsRequired();

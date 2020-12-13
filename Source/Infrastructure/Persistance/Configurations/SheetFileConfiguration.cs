@@ -8,9 +8,12 @@ namespace EOrchestralBriefcase.Infrastructure.Persistance.Configurations
     {
         public void Configure(EntityTypeBuilder<SheetFile> builder)
         {
-            builder.Property(p => p.Id).HasColumnName("SheetFileID");
+            builder
+                .Property(property => property.Id)
+                .HasColumnName("SheetFileID");
 
-            builder.Property(p => p.Title)
+            builder
+                .Property(property => property.Title)
                 .HasMaxLength(80)
                 .IsUnicode()
                 .IsRequired();

@@ -1,13 +1,12 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using EOrchestralBriefcase.Application.Dtos;
 using EOrchestralBriefcase.Application.Interfaces;
 using EOrchestralBriefcase.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EOrchestralBriefcase.Application.Services
 {
