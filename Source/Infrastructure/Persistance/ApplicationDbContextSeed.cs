@@ -47,7 +47,7 @@ namespace EOrchestralBriefcase.Infrastructure.Persistance
                 context.OrchestralBriefcases.AddRange(orchestralBriefcases);
                 context.OrchestralBriefcaseOrchestralPiece.AddRange(orchestralPieceLinks);
 
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
 

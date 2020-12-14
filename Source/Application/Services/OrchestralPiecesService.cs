@@ -21,26 +21,23 @@ namespace EOrchestralBriefcase.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<OrchestralPieceDto> GetByIdAsync(int id, int orchBriefcaseId)
+        public async Task<OrchestralPieceDto> GetByIdAsync(int id)
         {
-            var orchPieceDto = await _dbContext.OrchestralPieces
-                .Where(orchPiece => orchPiece.Id == id)
-                .ProjectTo<OrchestralPieceDto>(_mapper.ConfigurationProvider)
-                .SingleOrDefaultAsync();
+            var entity = await _dbContext.OrchestralPieces
+                .FindAsync(id)
+                .ConfigureAwait(false);
 
-            return orchPieceDto;
+            return _mapper.Map<OrchestralPieceDto>(entity);
         }
 
-        public async Task<List<OrchestralPieceDto>> GetAllForBriefcaseAsync(int orchBriefcaseId)
+        public Task<List<OrchestralPieceDto>> GetAllForBriefcaseAsync(int orchBriefcaseId)
         {
-            var orchPieceDtos = await _dbContext.OrchestralPieces
+            return _dbContext.OrchestralPieces
                 .Where(orchPiece => orchPiece.OrchestralBriefcaseLinks
                     .Any(orchBriefcaseLinks => orchBriefcaseLinks.OrchestralBriefcaseId == orchBriefcaseId))
                 .ProjectTo<OrchestralPieceDto>(_mapper.ConfigurationProvider)
                 .OrderBy(orchPieceDto => orchPieceDto.NumberInBriefcase)
                 .ToListAsync();
-
-            return orchPieceDtos;
         }
 
         public async Task<int> InsertAsync(OrchestralPieceDto orchPieceDto)
@@ -58,7 +55,7 @@ namespace EOrchestralBriefcase.Application.Services
             });
 
             _dbContext.OrchestralPieces.Add(orchPiece);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
 
             return orchPiece.Id;
         }
@@ -67,12 +64,14 @@ namespace EOrchestralBriefcase.Application.Services
         {
             var orchPiece = _mapper.Map<OrchestralPiece>(orchPieceDto);
             var orchBriefcase = await _dbContext.OrchestralBriefcases
-                .FirstOrDefaultAsync(oB => oB.Id == orchPieceDto.OrchestralBriefcaseId);
+                .FirstOrDefaultAsync(oB => oB.Id == orchPieceDto.OrchestralBriefcaseId)
+                .ConfigureAwait(false);
 
             var orchBriefcaseLink = await _dbContext.OrchestralBriefcaseOrchestralPiece
                 .FirstOrDefaultAsync(link =>
                     link.OrchestralBriefcaseId == orchPieceDto.OrchestralBriefcaseId
-                    && link.OrchestralPieceId == orchPieceDto.Id);
+                    && link.OrchestralPieceId == orchPieceDto.Id)
+                .ConfigureAwait(false);
 
             if (orchBriefcaseLink.NumberInBriefcase != orchPieceDto.NumberInBriefcase)
             {
@@ -81,18 +80,19 @@ namespace EOrchestralBriefcase.Application.Services
             }
             _dbContext.OrchestralPieces.Update(orchPiece);
 
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync().ConfigureAwait(false);
         }
 
         public async Task DeleteAsync(int id)
         {
             var orchPiece = await _dbContext.OrchestralPieces
-                .FirstOrDefaultAsync(oP => oP.Id == id);
+                .FirstOrDefaultAsync(oP => oP.Id == id)
+                .ConfigureAwait(false);
 
             if (orchPiece != null)
             {
                 _dbContext.OrchestralPieces.Remove(orchPiece);
-                await _dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync().ConfigureAwait(false);
             }
         }
     }

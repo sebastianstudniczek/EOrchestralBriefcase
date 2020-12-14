@@ -19,9 +19,9 @@ namespace EOrchestralBriefcase.Infrastructure.Persistance
         public DbSet<SheetFile> SheetFiles { get; set; }
         public DbSet<OrchestralBriefcaseOrchestralPiece> OrchestralBriefcaseOrchestralPiece { get; set; }
 
-        public async Task<int> SaveChangesAsync()
+        public Task<int> SaveChangesAsync()
         {
-            return await base.SaveChangesAsync();
+            return base.SaveChangesAsync();
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
