@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using EOrchestralBriefcase.Application.Interfaces;
 using EOrchestralBriefcase.Application.Services;
-
 using FluentValidation;
-
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -17,6 +15,7 @@ namespace EOrchestralBriefcase.Application
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddTransient<IOrchestralBriefcasesService, OrchestralBriefcasesService>();
             services.AddTransient<IOrchestralPiecesService, OrchestralPiecesService>();
+
             return services;
         }
     }

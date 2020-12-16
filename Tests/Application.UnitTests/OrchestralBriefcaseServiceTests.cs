@@ -1,16 +1,12 @@
 ﻿using System.Collections.Generic;
-
 using AutoMapper;
-
 using EOrchestralBriefcase.Application.Dtos;
 using EOrchestralBriefcase.Application.Interfaces;
 using EOrchestralBriefcase.Application.Mappings;
 using EOrchestralBriefcase.Application.Services;
 using EOrchestralBriefcase.Infrastructure.Persistance;
 using EOrchestralBriefcase.Tests.Application.UnitTests.Helper;
-
 using Microsoft.EntityFrameworkCore;
-
 using Xunit;
 
 namespace EOrchestralBriefcase.Tests.Application.UnitTests

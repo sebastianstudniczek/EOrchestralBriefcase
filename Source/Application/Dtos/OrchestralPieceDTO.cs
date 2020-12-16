@@ -1,8 +1,5 @@
 ﻿using System.Linq;
-using System.Net.Sockets;
-
 using AutoMapper;
-
 using EOrchestralBriefcase.Application.Mappings;
 using EOrchestralBriefcase.Domain.Entities;
 

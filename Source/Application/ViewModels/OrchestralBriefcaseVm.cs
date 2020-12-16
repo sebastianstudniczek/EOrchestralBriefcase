@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
-
 using AutoMapper;
-
 using EOrchestralBriefcase.Application.Dtos;
 using EOrchestralBriefcase.Application.Mappings;
 
@@ -22,6 +20,5 @@ namespace EOrchestralBriefcase.Application.ViewModels
             profile.CreateMap<OrchestralBriefcaseVm, OrchestralBriefcaseDto>()
                 .ReverseMap();
         }
-
     }
 }

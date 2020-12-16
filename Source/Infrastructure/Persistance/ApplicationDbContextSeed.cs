@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using EOrchestralBriefcase.Domain.Entities;
 
 namespace EOrchestralBriefcase.Infrastructure.Persistance
@@ -48,7 +47,7 @@ namespace EOrchestralBriefcase.Infrastructure.Persistance
                 context.OrchestralBriefcases.AddRange(orchestralBriefcases);
                 context.OrchestralBriefcaseOrchestralPiece.AddRange(orchestralPieceLinks);
 
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync().ConfigureAwait(false);
             }
         }
 

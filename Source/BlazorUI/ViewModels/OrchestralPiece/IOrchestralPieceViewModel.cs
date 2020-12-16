@@ -10,7 +10,7 @@ namespace EOrchestralBriefcase.BlazorUI.ViewModels.OrchestralPiece
         OrchestralPieceVm OrchestralPiece { get; set; }
         IEnumerable<OrchestralPieceVm> OrchestralPieces { get; set; }
 
-        Task GetById(int id);
+        Task GetByIdAsync(int id);
         Task GetAllForBriefcase(int orchBriefcaseId);
         Task CreateAsync();
         Task UpdateAsync();

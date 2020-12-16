@@ -1,6 +1,4 @@
-﻿
-using EOrchestralBriefcase.Application.ViewModels;
-
+﻿using EOrchestralBriefcase.Application.ViewModels;
 using FluentValidation;
 using static EOrchestralBriefcase.Application.Validators.FluentValidationHelper;
 

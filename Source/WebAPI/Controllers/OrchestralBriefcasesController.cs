@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace EOrchestralBriefcase.WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/v{version:int}/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiVersion("1")]
     [Produces("application/json")]
     public class OrchestralBriefcasesController : ControllerBase
@@ -27,7 +27,7 @@ namespace EOrchestralBriefcase.WebAPI.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<OrchestralBriefcasesVm>> GetAllAsync()
+        public async Task<ActionResult<OrchestralBriefcasesVm>> GetAll()
         {
             var orchPiecesDto = await _orchBriefcaseService.GetAllAsync();
             List<OrchestralBriefcaseVm> orchBriefcaseVms =
@@ -46,7 +46,7 @@ namespace EOrchestralBriefcase.WebAPI.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<OrchestralBriefcaseVm>> GetByIdAsync(int id)
+        public async Task<ActionResult<OrchestralBriefcaseVm>> GetById(int id)
         {
             var orchPieceDto = await _orchBriefcaseService.GetByIdAsync(id);
 
@@ -63,7 +63,7 @@ namespace EOrchestralBriefcase.WebAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> CreateAsync([FromBody] OrchestralBriefcaseVm vm)
+        public async Task<IActionResult> Create([FromBody] OrchestralBriefcaseVm vm)
         {
             int id;
             var orchBriefcaseDto = _mapper.Map<OrchestralBriefcaseVm,OrchestralBriefcaseDto>(vm);
@@ -84,7 +84,7 @@ namespace EOrchestralBriefcase.WebAPI.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UpdateAsync(int id, [FromBody] OrchestralBriefcaseVm orchBriefcaseVm)
+        public async Task<IActionResult> Update(int id, [FromBody] OrchestralBriefcaseVm orchBriefcaseVm)
         {
             if (id != orchBriefcaseVm.Id)
             {
@@ -113,7 +113,7 @@ namespace EOrchestralBriefcase.WebAPI.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> DeleteByIdAsync(int id)
+        public async Task<IActionResult> DeleteById(int id)
         {
             await _orchBriefcaseService.DeleteByIdAsync(id);
 
