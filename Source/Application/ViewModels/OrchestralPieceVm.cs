@@ -5,7 +5,7 @@ using EOrchestralBriefcase.Application.Mappings;
 
 namespace EOrchestralBriefcase.Application.ViewModels
 {
-    public class OrchestralPieceVm  : IMapFrom<OrchestralPieceDto>
+    public class OrchestralPieceVm  : IMapFrom<OrchestralPieceReadDto>
     {
         public int Id { get; set; }
 
@@ -31,7 +31,7 @@ namespace EOrchestralBriefcase.Application.ViewModels
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<OrchestralPieceVm, OrchestralPieceDto>()
+            profile.CreateMap<OrchestralPieceVm, OrchestralPieceReadDto>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ReverseMap();
         }

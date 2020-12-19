@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using AutoMapper;
-using EOrchestralBriefcase.Application.Dtos;
+using EOrchestralBriefcase.Application.Dtos.OrchestralBriefcases;
 using EOrchestralBriefcase.Application.Mappings;
 
 namespace EOrchestralBriefcase.Application.ViewModels
 {
-    public class OrchestralBriefcaseVm : IMapFrom<OrchestralBriefcaseDto>
+    public class OrchestralBriefcaseVm : IMapFrom<OrchestralBriefcaseCreateDto>
     {
         public int Id { get; set; }
 
@@ -17,7 +17,7 @@ namespace EOrchestralBriefcase.Application.ViewModels
 
         public void Mapping(Profile profile)
         {
-            profile.CreateMap<OrchestralBriefcaseVm, OrchestralBriefcaseDto>()
+            profile.CreateMap<OrchestralBriefcaseVm, OrchestralBriefcaseCreateDto>()
                 .ReverseMap();
         }
     }

@@ -38,9 +38,9 @@ namespace EOrchestralBriefcase.BlazorUI.ViewModels.OrchestralBriefcase
         public async Task GetAllAsync()
         {
             var orchBriefcaseVm =
-                await _apiClient.GetFromJsonAsync<OrchestralBriefcasesVm>($"{_baseWebApiCall}");
+                await _apiClient.GetFromJsonAsync<List<OrchestralBriefcaseVm>>($"{_baseWebApiCall}");
 
-            OrchestralBriefcases = orchBriefcaseVm.OrchestralBriefcases.ToList();
+            OrchestralBriefcases = orchBriefcaseVm.ToList();
         }
 
         public async Task GetByIdAsync(int id)

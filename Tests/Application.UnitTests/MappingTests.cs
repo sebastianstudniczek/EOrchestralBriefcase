@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EOrchestralBriefcase.Application.Dtos;
+using EOrchestralBriefcase.Application.Dtos.OrchestralBriefcases;
 using EOrchestralBriefcase.Application.Mappings;
 using EOrchestralBriefcase.Domain.Entities;
 using System;
@@ -29,8 +30,8 @@ namespace EOrchestralBriefcase.Tests.Application.UnitTests
         }
 
         [Theory]
-        [InlineData(typeof(OrchestralBriefcase), typeof(OrchestralBriefcaseDto))]
-        [InlineData(typeof(OrchestralPiece), typeof(OrchestralPieceDto))]
+        [InlineData(typeof(OrchestralBriefcase), typeof(OrchestralBriefcaseCreateDto))]
+        [InlineData(typeof(OrchestralPiece), typeof(OrchestralPieceReadDto))]
         public void ShouldMapFromSourceToDestination(Type source, Type destination)
         {
             var instance = Activator.CreateInstance(source);
@@ -39,8 +40,8 @@ namespace EOrchestralBriefcase.Tests.Application.UnitTests
         }
 
         [Theory]
-        [InlineData(typeof(OrchestralBriefcaseDto), typeof(OrchestralBriefcase))]
-        [InlineData(typeof(OrchestralPieceDto), typeof(OrchestralPiece))]
+        [InlineData(typeof(OrchestralBriefcaseCreateDto), typeof(OrchestralBriefcase))]
+        [InlineData(typeof(OrchestralPieceReadDto), typeof(OrchestralPiece))]
         public void ShouldMapFromDestinationToSource(Type destination, Type source)
         {
             var instance = Activator.CreateInstance(destination);
