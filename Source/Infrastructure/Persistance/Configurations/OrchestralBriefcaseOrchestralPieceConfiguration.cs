@@ -12,7 +12,7 @@ namespace EOrchestralBriefcase.Infrastructure.Persistance.Configurations
                 .HasKey(key => new { key.OrchestralBriefcaseId, key.OrchestralPieceId });
 
             builder
-                .Property(property => property.NumberInBriefcase)
+                .Property(property => property.NumberInOrchestralBriefcase)
                 .IsRequired();
         }
     }

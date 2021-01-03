@@ -31,39 +31,69 @@ namespace EOrchestralBriefcase.Infrastructure.Persistance
                     new OrchestralPiece { Title = "Chorus of Hebrew Slaves"},
                     new OrchestralPiece { Title = "Symphonic Chorales"},
                     new OrchestralPiece { Title = "Habanera"},
-                    new OrchestralPiece { Title = "Amazing Grace"},
-                    new OrchestralPiece { Title = "Taniec Podhalańczyków"},
                 };
 
-                var orchestralPieceLinks = new List<OrchestralBriefcaseOrchestralPiece>();
-                var redBriefcaseLinks = AddOrchestralPieceToOrchestralBriefcase(orchestralBriefcases[0], orchestralPiecesRed);
-                var blackBriefcaseLinks = AddOrchestralPieceToOrchestralBriefcase(orchestralBriefcases[1], orchestralPiecesBlack);
-
-                orchestralPieceLinks.AddRange(redBriefcaseLinks);
-                orchestralPieceLinks.AddRange(blackBriefcaseLinks);
+                var orchestralPieceLinks = new List<OrchestralBriefcaseOrchestralPiece>
+                {
+                    new OrchestralBriefcaseOrchestralPiece
+                    {
+                        NumberInOrchestralBriefcase = 1,
+                        OrchestralBriefcase = orchestralBriefcases[0],
+                        OrchestralPiece = orchestralPiecesRed[0],
+                    },
+                    new OrchestralBriefcaseOrchestralPiece
+                    {
+                        NumberInOrchestralBriefcase = 2,
+                        OrchestralBriefcase = orchestralBriefcases[0],
+                        OrchestralPiece = orchestralPiecesRed[1],
+                    },
+                    new OrchestralBriefcaseOrchestralPiece
+                    {
+                        NumberInOrchestralBriefcase = 3,
+                        OrchestralBriefcase = orchestralBriefcases[0],
+                        OrchestralPiece = orchestralPiecesRed[2],
+                    },
+                    new OrchestralBriefcaseOrchestralPiece
+                    {
+                        NumberInOrchestralBriefcase = 4,
+                        OrchestralBriefcase = orchestralBriefcases[0],
+                        OrchestralPiece = orchestralPiecesRed[3],
+                    },
+                    new OrchestralBriefcaseOrchestralPiece
+                    {
+                        NumberInOrchestralBriefcase = 1,
+                        OrchestralBriefcase = orchestralBriefcases[1],
+                        OrchestralPiece = orchestralPiecesBlack[0],
+                    },
+                    new OrchestralBriefcaseOrchestralPiece
+                    {
+                        NumberInOrchestralBriefcase = 1,
+                        OrchestralBriefcase = orchestralBriefcases[1],
+                        OrchestralPiece = orchestralPiecesBlack[1],
+                    },
+                    new OrchestralBriefcaseOrchestralPiece
+                    {
+                        NumberInOrchestralBriefcase = 1,
+                        OrchestralBriefcase = orchestralBriefcases[1],
+                        OrchestralPiece = orchestralPiecesBlack[2],
+                    },
+                    new OrchestralBriefcaseOrchestralPiece
+                    {
+                        NumberInOrchestralBriefcase = 1,
+                        OrchestralBriefcase = orchestralBriefcases[1],
+                        OrchestralPiece = orchestralPiecesBlack[3],
+                    },
+                };
 
                 context.OrchestralPieces.AddRange(orchestralPiecesRed);
                 context.OrchestralPieces.AddRange(orchestralPiecesBlack);
                 context.OrchestralBriefcases.AddRange(orchestralBriefcases);
                 context.OrchestralBriefcaseOrchestralPiece.AddRange(orchestralPieceLinks);
 
-                await context.SaveChangesAsync().ConfigureAwait(false);
+                await context
+                    .SaveChangesAsync()
+                    .ConfigureAwait(false);
             }
         }
-
-        private static IEnumerable<OrchestralBriefcaseOrchestralPiece> AddOrchestralPieceToOrchestralBriefcase(OrchestralBriefcase orchestralBriefcase ,List<OrchestralPiece> orchestralPieces)
-        {
-            for (int i = 0; i < orchestralPieces.Count; i++)
-            {
-                yield return
-                    new OrchestralBriefcaseOrchestralPiece
-                    {
-                        NumberInBriefcase = i + 1,
-                        OrchestralBriefcase = orchestralBriefcase,
-                        OrchestralPiece = orchestralPieces[i]
-                    };
-            }
-        }
-
     }
 }
