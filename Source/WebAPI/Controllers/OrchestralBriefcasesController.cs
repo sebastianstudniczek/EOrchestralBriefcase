@@ -1,113 +1,83 @@
-﻿using AutoMapper;
-using EOrchestralBriefcase.Application.Dtos;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using EOrchestralBriefcase.Application.Dtos.OrchestralBriefcases;
+using EOrchestralBriefcase.Application.Dtos.OrchestralPieces;
 using EOrchestralBriefcase.Application.Interfaces;
-using EOrchestralBriefcase.Application.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace EOrchestralBriefcase.WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/v1/[controller]")]
-    [ApiVersion("1")]
     [Produces("application/json")]
+    [Route("api/v1/[controller]")]
     public class OrchestralBriefcasesController : ControllerBase
     {
-        private readonly IOrchestralBriefcasesService _orchBriefcaseService;
-        private readonly IMapper _mapper;
+        private readonly IOrchestralBriefcasesService _orchestralBriefcaseService;
+        private readonly IOrchestralPiecesService _orchestralPieceService;
 
-        public OrchestralBriefcasesController(IOrchestralBriefcasesService service, IMapper mapper)
+        public OrchestralBriefcasesController(
+            IOrchestralBriefcasesService orchestralBriefcaseService,
+            IOrchestralPiecesService orchestralPieceService)
         {
-            _orchBriefcaseService = service;
-            _mapper = mapper;
+            _orchestralBriefcaseService = orchestralBriefcaseService;
+            _orchestralPieceService = orchestralPieceService;
         }
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<OrchestralBriefcasesVm>> GetAll()
+        public async Task<ActionResult<List<OrchestralBriefcaseReadDto>>> GetAll()
         {
-            var orchPiecesDto = await _orchBriefcaseService.GetAllAsync();
-            List<OrchestralBriefcaseVm> orchBriefcaseVms =
-                _mapper.Map<List<OrchestralBriefcaseDto>, List<OrchestralBriefcaseVm>>(orchPiecesDto);
+            var orchestralBriefcasesReadDtos = await _orchestralBriefcaseService.GetAllAsync();
+            Response.Headers["x-total-count"] = orchestralBriefcasesReadDtos.Count.ToString();
 
-            var orchBriefcasesVm = new OrchestralBriefcasesVm
-            {
-                OrchestralBriefcases = orchBriefcaseVms,
-                Count = orchBriefcaseVms.Count
-            };
-            Response.Headers["x-total-count"] = orchBriefcasesVm.Count.ToString();
-
-            return Ok(orchBriefcasesVm);
+            return Ok(orchestralBriefcasesReadDtos);
         }
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<OrchestralBriefcaseVm>> GetById(int id)
+        public async Task<ActionResult<OrchestralBriefcaseReadDto>> GetById(int id)
         {
-            var orchPieceDto = await _orchBriefcaseService.GetByIdAsync(id);
+            var dto = await _orchestralBriefcaseService.GetByIdAsync(id);
 
-            if (orchPieceDto == null)
-            {
-                return NotFound();
-            }
-            OrchestralBriefcaseVm orchBriefcaseVm =
-                _mapper.Map<OrchestralBriefcaseDto, OrchestralBriefcaseVm>(orchPieceDto);
-
-            return Ok(orchPieceDto);
+            return Ok(dto);
         }
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create([FromBody] OrchestralBriefcaseVm vm)
+        public async Task<ActionResult<int>> Create(OrchestralBriefcaseCreateDto createDto)
         {
-            int id;
-            var orchBriefcaseDto = _mapper.Map<OrchestralBriefcaseVm,OrchestralBriefcaseDto>(vm);
-
-            try
+            if (!ModelState.IsValid)
             {
-                id = await _orchBriefcaseService.InsertAsync(orchBriefcaseDto);
-                orchBriefcaseDto.Id = id;
+                return ValidationProblem(ModelState);
+            }
 
-                return new CreatedResult($"/orchestralbriefcases/{orchBriefcaseDto.Name}", orchBriefcaseDto);
-            }
-            catch (Exception ex)
-            {
-                return ValidationProblem(ex.Message);
-            }
+            int id = await _orchestralBriefcaseService.CreateAsync(createDto);
+
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Update(int id, [FromBody] OrchestralBriefcaseVm orchBriefcaseVm)
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Update(int id, OrchestralBriefcaseUpdateDto updateDto)
         {
-            if (id != orchBriefcaseVm.Id)
+            if (id != updateDto.Id)
             {
                 return BadRequest();
             }
-            try
+
+            if (!ModelState.IsValid)
             {
-                var orchBriefcaseDto = await _orchBriefcaseService.GetByIdAsync(orchBriefcaseVm.Id);
-
-                if (orchBriefcaseDto == null)
-                {
-                    return NotFound();
-                }
-
-                orchBriefcaseDto = _mapper.Map<OrchestralBriefcaseDto>(orchBriefcaseVm);
-                await _orchBriefcaseService.UpdateAsync(orchBriefcaseDto);
-
-                return Ok(orchBriefcaseDto);
+                return ValidationProblem(ModelState);
             }
-            catch (Exception ex)
-            {
-                return ValidationProblem(ex.Message);
-            }
+
+            await _orchestralBriefcaseService.UpdateAsync(updateDto);
+
+            return Ok();
         }
 
         [HttpDelete("{id}")]
@@ -115,9 +85,20 @@ namespace EOrchestralBriefcase.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteById(int id)
         {
-            await _orchBriefcaseService.DeleteByIdAsync(id);
+            await _orchestralBriefcaseService.DeleteByIdAsync(id);
 
             return NoContent();
+        }
+
+        [HttpGet("{id}/orchestralpieces")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<List<OrchestralPieceReadDto>>> GetOrchestralPiecesForBriefcase(int id)
+        {
+            var orchestralPieces = await _orchestralPieceService
+                .GetAllForOrchestralBriefcaseAsync(id);
+
+            return Ok(orchestralPieces);
         }
     }
 }
