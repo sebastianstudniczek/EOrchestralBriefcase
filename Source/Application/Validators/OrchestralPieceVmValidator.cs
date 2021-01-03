@@ -1,4 +1,5 @@
-﻿using EOrchestralBriefcase.Application.ViewModels;
+﻿using EOrchestralBriefcase.Application.Validators.Rules;
+using EOrchestralBriefcase.Application.ViewModels;
 using FluentValidation;
 using static EOrchestralBriefcase.Application.Validators.FluentValidationHelper;
 
@@ -17,12 +18,10 @@ namespace EOrchestralBriefcase.Application.Validators
                     .WithMessage("Tytuł nie powinien być dłuższy niż 50 znaków");
 
             RuleFor(orchPiece => orchPiece.Tempo)
-                .GreaterThan(0)
-                    .WithMessage("Wartość musi być większa od 0");
+                .TempoValidation();
 
             RuleFor(orchPiece => orchPiece.SongLink)
-                .Must(BeYoutubeUrl)
-                    .WithMessage("Niewłaściwy link");
+                .SongLinkValidation();
 
             RuleFor(orchPiece => orchPiece.NumberInBriefcase)
                 .NotNull()
