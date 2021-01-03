@@ -5,6 +5,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using MicroElements.Swashbuckle.FluentValidation;
+using Swashbuckle.AspNetCore.Swagger;
+using FluentValidation.AspNetCore;
+using EOrchestralBriefcase.WebAPI.Filters;
 
 namespace EOrchestralBriefcase.WebAPI
 {
@@ -21,16 +26,27 @@ namespace EOrchestralBriefcase.WebAPI
         {
             services.AddApplication();
             services.AddInfrastructure(Configuration);
-            services.AddCors(options =>
-            {
-                options.AddPolicy("Open", options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-            });
+            //services.AddCors(options =>
+            //{
+            //    options.AddPolicy("Open", options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            //});
 
-            services.AddControllers().AddNewtonsoftJson();
+            services
+                .AddControllers(options => options.Filters.Add(new ApiExceptionFilter()))
+                .AddFluentValidation(config =>
+                    config.ValidatorFactoryType = typeof(HttpContextServiceProviderValidatorFactory));
+
+
             services.AddRouting(options => options.LowercaseUrls = true);
-            services.AddSwaggerDocument(configure =>
+
+            services.AddSwaggerGen(config =>
             {
-                configure.Title = "EOrchestral Briefcase API";
+                config.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "EOrchestral Briefcase API"
+                });
+                config.AddFluentValidationRules();
             });
         }
 
@@ -42,12 +58,15 @@ namespace EOrchestralBriefcase.WebAPI
             }
 
             app.UseRouting();
-            app.UseCors("Open");
-            app.UseAuthentication();
-            app.UseAuthorization();
+            //app.UseCors("Open");
+            //app.UseAuthentication();
+            //app.UseAuthorization();
 
-            app.UseOpenApi();
-            app.UseSwaggerUi3();
+            app.UseSwagger();
+            app.UseSwaggerUI(config =>
+            {
+                config.SwaggerEndpoint("v1/swagger.json", "EOrchestral Briefcase API");
+            });
 
             app.UseEndpoints(endpoints =>
             {
