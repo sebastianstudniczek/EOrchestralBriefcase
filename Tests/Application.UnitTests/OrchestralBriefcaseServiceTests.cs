@@ -1,60 +1,61 @@
-﻿using System.Collections.Generic;
+﻿using System.Threading.Tasks;
 using AutoMapper;
-using EOrchestralBriefcase.Application.Dtos;
-using EOrchestralBriefcase.Application.Interfaces;
-using EOrchestralBriefcase.Application.Mappings;
+using EOrchestralBriefcase.Application.Exceptions;
 using EOrchestralBriefcase.Application.Services;
+using EOrchestralBriefcase.Application.UnitTests.Common;
 using EOrchestralBriefcase.Infrastructure.Persistance;
-using EOrchestralBriefcase.Tests.Application.UnitTests.Helper;
-using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace EOrchestralBriefcase.Tests.Application.UnitTests
 {
-    public class OrchestralBriefcaseServiceTests
+    public class OrchestralBriefcaseServiceTests : ServiceTest, IClassFixture<ServiceTestFixture>
     {
-        private readonly IConfigurationProvider _configuration;
         private readonly IMapper _mapper;
-        public OrchestralBriefcaseServiceTests()
+        public OrchestralBriefcaseServiceTests(ServiceTestFixture fixture)
         {
-            _configuration = new MapperConfiguration(cfg =>
-            {
-                cfg.AddProfile<MappingProfile>();
-            });
-            _mapper = _configuration.CreateMapper();
-
-            ContextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "orchestralBriefcaseServiceTests")
-                .Options;
-
-            DataSeeder.Seed(ContextOptions);
+            _mapper = fixture.Mapper;
+            DataSeeder.Seed(DbContextOptions);
         }
-        public DbContextOptions<ApplicationDbContext> ContextOptions { get; }
 
         [Fact]
-        public void GetAllAsync_ShouldReturnAllOrchestralBriefcaseDtos()
+        public async Task GetAllAsync_ShouldReturnAllOrchestralBriefcaseDtos()
         {
-            List<OrchestralBriefcaseDto> expectedOrchBriefcasesDto = new List<OrchestralBriefcaseDto>
+            using (var context = new ApplicationDbContext(DbContextOptions))
             {
-                new OrchestralBriefcaseDto { Id = 1, Name = "Czerwona" },
-                new OrchestralBriefcaseDto { Id = 2, Name = "Czarna" },
-                new OrchestralBriefcaseDto { Id = 3, Name = "Niebieska"}
-            };
+                var service = new OrchestralBriefcasesService(context, _mapper);
 
-            using (var context = new ApplicationDbContext(ContextOptions))
+                var actualOrchBriefcasesDto = await service.GetAllAsync();
+
+                Assert.Equal(actualOrchBriefcasesDto.Count, DataSeeder.OrchestralBriefcaseCount);
+            }
+        }
+
+        [Fact]
+        public async Task GetByIdAsync_ShouldReturnOrchestralBriefcaseDto()
+        {
+            int id = 2;
+
+            using (var context = new ApplicationDbContext(DbContextOptions))
             {
-                IOrchestralBriefcasesService service = new OrchestralBriefcasesService(context,_mapper);
-                List<OrchestralBriefcaseDto> actualOrchBriefcasesDto = service.GetAllAsync().Result;
+                var service = new OrchestralBriefcasesService(context, _mapper);
 
-                Assert.True(actualOrchBriefcasesDto.Count == 3);
-                Assert.True(CustomComparer<OrchestralBriefcaseDto>.CheckIfPropertiesAreEqual(
-                    expectedOrchBriefcasesDto[0], actualOrchBriefcasesDto[0]));
+                var orchestralBriefcaseDto = await service.GetByIdAsync(id);
 
-                Assert.True(CustomComparer<OrchestralBriefcaseDto>.CheckIfPropertiesAreEqual(
-                    expectedOrchBriefcasesDto[1], actualOrchBriefcasesDto[1]));
+                Assert.True(orchestralBriefcaseDto != null);
+                Assert.Equal(orchestralBriefcaseDto.Id, id);
+            }
+        }
 
-                Assert.True(CustomComparer<OrchestralBriefcaseDto>.CheckIfPropertiesAreEqual(
-                    expectedOrchBriefcasesDto[2], actualOrchBriefcasesDto[2]));
+        [Fact]
+        public void GetByIdAsync_ShouldRequireValidId()
+        {
+            int id = 99;
+
+            using (var context = new ApplicationDbContext(DbContextOptions))
+            {
+                var service = new OrchestralBriefcasesService(context, _mapper);
+
+                Assert.ThrowsAsync<NotFoundException>(async () => await service.GetByIdAsync(id));
             }
         }
     }

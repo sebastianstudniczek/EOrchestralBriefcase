@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Reflection;
 
-namespace EOrchestralBriefcase.Tests.Application.UnitTests.Helper
+namespace EOrchestralBriefcase.Application.UnitTests.Common
 {
     internal static class CustomComparer<T> where T : class
     {
-       internal static bool CheckIfPropertiesAreEqual(T expectedObject, T actualObject)
-       {
+        internal static bool CheckIfPropertiesAreEqual(T expectedObject, T actualObject)
+        {
             PropertyInfo[] properties = expectedObject.GetType().GetProperties();
-            
+
             foreach (PropertyInfo property in properties)
             {
                 var value1 = property.GetValue(expectedObject);
@@ -23,7 +23,7 @@ namespace EOrchestralBriefcase.Tests.Application.UnitTests.Helper
                 }
             }
             return true;
-       }
+        }
 
         private static bool IsNonStringEnumerable(PropertyInfo property)
         {

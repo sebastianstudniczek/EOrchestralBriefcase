@@ -3,24 +3,27 @@ using EOrchestralBriefcase.Domain.Entities;
 using EOrchestralBriefcase.Infrastructure.Persistance;
 using Microsoft.EntityFrameworkCore;
 
-namespace EOrchestralBriefcase.Tests.Application.UnitTests.Helper
+namespace EOrchestralBriefcase.Application.UnitTests.Common
 {
     internal static class DataSeeder
     {
+        internal static int OrchestralBriefcaseCount { get; private set; }
+        internal static int OrchestralPieceCount { get; private set; }
+
         internal static void Seed(DbContextOptions<ApplicationDbContext> options)
         {
             using (var context = new ApplicationDbContext(options))
             {
-                context.Database.EnsureDeleted();
-
-                List<OrchestralBriefcase> orchBriefcases = new List<OrchestralBriefcase>
+                var orchestralBriefcases = new List<OrchestralBriefcase>
                 {
                     new OrchestralBriefcase { Id = 1, Name = "Czerwona" },
                     new OrchestralBriefcase { Id = 2, Name = "Czarna" },
                     new OrchestralBriefcase { Id = 3, Name = "Niebieska"}
                 };
 
-                List<OrchestralPiece> orchPieces = new List<OrchestralPiece>
+                OrchestralBriefcaseCount = orchestralBriefcases.Count;
+
+                var orchestralPieces = new List<OrchestralPiece>
                 {
                     new OrchestralPiece
                     {
@@ -49,25 +52,26 @@ namespace EOrchestralBriefcase.Tests.Application.UnitTests.Helper
                     },
                 };
 
+                OrchestralPieceCount = orchestralPieces.Count;
                 int numberInBriefcase = 1;
 
                 var orchestralBriefcaseOrchestralPiece = new List<OrchestralBriefcaseOrchestralPiece>();
 
-                for (int i = 0; i < orchPieces.Count; i++)
+                for (int i = 0; i < orchestralPieces.Count; i++)
                 {
                     orchestralBriefcaseOrchestralPiece.Add(
                         new OrchestralBriefcaseOrchestralPiece
                         {
-                            NumberInBriefcase = numberInBriefcase,
-                            OrchestralBriefcase = orchBriefcases[0],
-                            OrchestralPiece = orchPieces[i]
+                            NumberInOrchestralBriefcase = numberInBriefcase,
+                            OrchestralBriefcase = orchestralBriefcases[0],
+                            OrchestralPiece = orchestralPieces[i]
                         }
                     );
                     numberInBriefcase++;
                 }
 
-                context.OrchestralPieces.AddRange(orchPieces);
-                context.OrchestralBriefcases.AddRange(orchBriefcases);
+                context.OrchestralPieces.AddRange(orchestralPieces);
+                context.OrchestralBriefcases.AddRange(orchestralBriefcases);
                 context.OrchestralBriefcaseOrchestralPiece.AddRange(orchestralBriefcaseOrchestralPiece);
                 context.SaveChanges();
             }
