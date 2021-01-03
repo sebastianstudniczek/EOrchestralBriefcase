@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using AutoMapper;
-using EOrchestralBriefcase.Application.Dtos;
+using EOrchestralBriefcase.Application.Dtos.OrchestralPieces;
 using EOrchestralBriefcase.Application.Mappings;
 
 namespace EOrchestralBriefcase.Application.ViewModels
