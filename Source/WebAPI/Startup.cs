@@ -26,10 +26,10 @@ namespace EOrchestralBriefcase.WebAPI
         {
             services.AddApplication();
             services.AddInfrastructure(Configuration);
-            //services.AddCors(options =>
-            //{
-            //    options.AddPolicy("Open", options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
-            //});
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Open", options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            });
 
             services
                 .AddControllers(options => options.Filters.Add(new ApiExceptionFilter()))
@@ -58,9 +58,9 @@ namespace EOrchestralBriefcase.WebAPI
             }
 
             app.UseRouting();
-            //app.UseCors("Open");
-            //app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseCors("Open");
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseSwagger();
             app.UseSwaggerUI(config =>
