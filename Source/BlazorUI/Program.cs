@@ -1,8 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using EOrchestralBriefcase.BlazorUI.ViewModels.OrchestralBriefcase;
-using EOrchestralBriefcase.BlazorUI.ViewModels.OrchestralPiece;
+using EOrchestralBriefcase.BlazorUI.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,8 +19,8 @@ namespace EOrchestralBriefcase.BlazorUI
             var baseAddress = builder.Configuration.GetValue<string>("BaseUrl");
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(baseAddress) });
 
-            builder.Services.AddScoped<IOrchestralBriefcaseViewModel, OrchestralBriefcaseViewModel>();
-            builder.Services.AddScoped<IOrchestralPieceViewModel, OrchestralPieceViewModel>();
+            builder.Services.AddScoped<IOrchestralPiecesService, OrchestralPiecesService>();
+            builder.Services.AddScoped<IOrchestralBriefcasesService, OrchestralBriefcasesService>();
 
             await builder.Build().RunAsync();
         }
