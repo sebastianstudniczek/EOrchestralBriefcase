@@ -1,15 +1,15 @@
-﻿using EOrchestralBriefcase.Application.Dtos;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using EOrchestralBriefcase.Application.Dtos.OrchestralBriefcases;
 
 namespace EOrchestralBriefcase.Application.Interfaces
 {
     public interface IOrchestralBriefcasesService
     {
-        Task<OrchestralBriefcaseDto> GetByIdAsync(int id);
-        Task<List<OrchestralBriefcaseDto>> GetAllAsync();
-        Task<int> InsertAsync(OrchestralBriefcaseDto dto);
-        Task UpdateAsync(OrchestralBriefcaseDto dto);
+        Task<List<OrchestralBriefcaseReadDto>> GetAllAsync();
+        Task<OrchestralBriefcaseReadDto> GetByIdAsync(int id);
+        Task<int> CreateAsync(OrchestralBriefcaseCreateDto createDto);
+        Task UpdateAsync(OrchestralBriefcaseUpdateDto updateDto);
         Task DeleteByIdAsync(int id);
     }
 }

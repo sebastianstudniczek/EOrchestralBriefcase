@@ -1,0 +1,46 @@
+﻿@page "/orchestralbriefcases/edit/{id:int?}"
+
+<div class="pl-3">
+    <h2>@PageHeaderText</h2>
+    <hr />
+</div>
+
+<div class="col-10 col-sm-6">
+    @if (Id != 0)
+    {
+        <EditForm Model="@UpdateDto" OnValidSubmit="HandleValidSubmit">
+            <CustomInputText @bind-Value="UpdateDto.Name"
+                             ValidationFor="@(() => UpdateDto.Name)" />
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary mr-3">
+                    @SubmitButtonText
+                </button>
+                <a class="btn btn-danger text-white" @onclick="HandleAbort">
+                    Anuluj
+                </a>
+            </div>
+        </EditForm>
+    }
+    else
+    {
+        <EditForm Model="@CreateDto" OnValidSubmit="HandleValidSubmit">
+            <CustomInputText @bind-Value="CreateDto.Name"
+                             ValidationFor="@(() => CreateDto.Name)" />
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary mr-3">
+                    @SubmitButtonText
+                </button>
+                <a class="btn btn-danger text-white" @onclick="HandleAbort">
+                    Anuluj
+                </a>
+            </div>
+        </EditForm>
+    }
+
+    @if (Message != null)
+    {
+        <div class="mt-5">
+            <span class="alert alert-success text-center">@Message</span>
+        </div>
+    }
+</div>

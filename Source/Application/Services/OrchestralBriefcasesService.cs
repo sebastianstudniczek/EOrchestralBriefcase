@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using EOrchestralBriefcase.Application.Dtos;
+using EOrchestralBriefcase.Application.Dtos.OrchestralBriefcases;
+using EOrchestralBriefcase.Application.Exceptions;
 using EOrchestralBriefcase.Application.Interfaces;
 using EOrchestralBriefcase.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -21,61 +21,51 @@ namespace EOrchestralBriefcase.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<OrchestralBriefcaseDto> GetByIdAsync(int id)
+        public Task<List<OrchestralBriefcaseReadDto>> GetAllAsync()
+        {
+            return _dbContext.OrchestralBriefcases
+                .ProjectTo<OrchestralBriefcaseReadDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+        }
+
+        public async Task<OrchestralBriefcaseReadDto> GetByIdAsync(int id)
         {
             var entity = await _dbContext.OrchestralBriefcases
                 .FindAsync(id)
                 .ConfigureAwait(false);
 
-            var orchBriefcaseDto = _mapper.Map<OrchestralBriefcaseDto>(entity);
-
-            var orchPiecesForBriefcase =
-                await GetAllOrchestralPiecesForBriefcase(id).ConfigureAwait(false);
-
-            if (orchBriefcaseDto != null)
+            if (entity is null)
             {
-                orchBriefcaseDto.OrchestralPieces = orchPiecesForBriefcase;
+                throw new NotFoundException(nameof(OrchestralBriefcase), id);
             }
 
-            return orchBriefcaseDto;
+            return _mapper.Map<OrchestralBriefcaseReadDto>(entity);
         }
 
-        public async Task<List<OrchestralPieceDto>> GetAllOrchestralPiecesForBriefcase(int orchBriefcaseId)
+        public async Task<int> CreateAsync(OrchestralBriefcaseCreateDto createDto)
         {
-            var orchPieces = await _dbContext.OrchestralPieces
-                .Where(orchPiece => orchPiece.OrchestralBriefcaseLinks
-                    .Any(link => link.OrchestralBriefcaseId == orchBriefcaseId))
-                .ProjectTo<OrchestralPieceDto>(_mapper.ConfigurationProvider)
-                .OrderBy(orchPiece => orchPiece.NumberInBriefcase)
-                .ToListAsync()
-                .ConfigureAwait(false);
+            var entity = new OrchestralBriefcase { Name = createDto.Name };
 
-            return orchPieces;
-        }
-
-        public Task<List<OrchestralBriefcaseDto>> GetAllAsync()
-        {
-            return _dbContext.OrchestralBriefcases
-                .ProjectTo<OrchestralBriefcaseDto>(_mapper.ConfigurationProvider)
-                .ToListAsync();
-        }
-
-        public async Task<int> InsertAsync(OrchestralBriefcaseDto dto)
-        {
-            var orchBriefcase = _mapper.Map<OrchestralBriefcase>(dto);
-            _dbContext.OrchestralBriefcases.Add(orchBriefcase);
-
+            _dbContext.OrchestralBriefcases.Add(entity);
             await _dbContext
                 .SaveChangesAsync()
                 .ConfigureAwait(false);
 
-            return orchBriefcase.Id;
+            return entity.Id;
         }
 
-        public async Task UpdateAsync(OrchestralBriefcaseDto dto)
+        public async Task UpdateAsync(OrchestralBriefcaseUpdateDto updateDto)
         {
-            var orchestralBriefcase = _mapper.Map<OrchestralBriefcase>(dto);
-            _dbContext.OrchestralBriefcases.Update(orchestralBriefcase);
+            var entity = await _dbContext.OrchestralBriefcases
+                .FindAsync(updateDto.Id)
+                .ConfigureAwait(false);
+
+            if (entity is null)
+            {
+                throw new NotFoundException(nameof(OrchestralBriefcase), updateDto.Id);
+            }
+
+            entity.Name = updateDto.Name;
 
             await _dbContext
                 .SaveChangesAsync()
@@ -84,17 +74,19 @@ namespace EOrchestralBriefcase.Application.Services
 
         public async Task DeleteByIdAsync(int id)
         {
-            var orchestralBriefcase = await _dbContext.OrchestralBriefcases
+            var entity = await _dbContext.OrchestralBriefcases
                 .FindAsync(id)
                 .ConfigureAwait(false);
 
-            if (orchestralBriefcase != null)
+            if (entity is null)
             {
-                _dbContext.OrchestralBriefcases.Remove(orchestralBriefcase);
-                await _dbContext
-                    .SaveChangesAsync()
-                    .ConfigureAwait(false);
+                throw new NotFoundException(nameof(OrchestralBriefcase), id);
             }
+
+            _dbContext.OrchestralBriefcases.Remove(entity);
+            await _dbContext
+                .SaveChangesAsync()
+                .ConfigureAwait(false);
         }
     }
 }

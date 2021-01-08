@@ -1,96 +1,71 @@
-﻿using AutoMapper;
-using EOrchestralBriefcase.Application.Dtos;
+﻿using System.Threading.Tasks;
+using AutoMapper;
+using EOrchestralBriefcase.Application.Dtos.OrchestralPieces;
 using EOrchestralBriefcase.Application.Interfaces;
-using EOrchestralBriefcase.Application.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
 
 namespace EOrchestralBriefcase.WebAPI.Controllers
 {
     [ApiController]
     [Route("api/v1/[controller]")]
-    [ApiVersion("1")]
     [Produces("application/json")]
     public class OrchestralPiecesController : ControllerBase
     {
-        private readonly IOrchestralPiecesService _orchPieceService;
+        private readonly IOrchestralPiecesService _orchestralPieceService;
         private readonly IMapper _mapper;
 
         public OrchestralPiecesController(IOrchestralPiecesService orchPieceService, IMapper mapper)
         {
-            _orchPieceService = orchPieceService;
+            _orchestralPieceService = orchPieceService;
             _mapper = mapper;
         }
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<OrchestralPieceVm>> GetById(int id, [FromQuery] int orchBriefcaseId)
+        public async Task<ActionResult<OrchestralPieceReadDto>> GetById(int id)
         {
-            var orchPieceDto = await _orchPieceService.GetByIdAsync(id);
+            var dto = await _orchestralPieceService.GetById(id);
 
-            if (orchPieceDto == null)
-            {
-                return NotFound();
-            }
-            var orchPieceVm = _mapper.Map<OrchestralPieceVm>(orchPieceDto);
-
-            return Ok(orchPieceVm);
+            return dto;
         }
+
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Create([FromBody]OrchestralPieceVm vm)
+        public async Task<ActionResult<int>> Create(OrchestralPieceCreateDto createDto)
         {
-            int id;
-            var orchPieceDto = _mapper.Map<OrchestralPieceDto>(vm);
-
-            try
+            if (!ModelState.IsValid)
             {
-                id = await _orchPieceService.InsertAsync(orchPieceDto);
-                orchPieceDto.Id = id;
+                return ValidationProblem(ModelState);
+            }
 
-                return new CreatedResult($"/orchestralpieces/{orchPieceDto.Title}",orchPieceDto);
-            }
-            catch (Exception ex)
-            {
-                return ValidationProblem(ex.Message);
-            }
+            int id = await _orchestralPieceService.CreateAsync(createDto);
+
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Update(int id, [FromBody] OrchestralPieceVm orchPieceVm)
+        public async Task<IActionResult> Update(int id, OrchestralPieceUpdateDto updateDto)
         {
-            if (id != orchPieceVm.Id)
+            if (id != updateDto.Id)
             {
                 return BadRequest();
             }
 
-            try
+            if (!ModelState.IsValid)
             {
-                var orchPieceDto = await _orchPieceService.GetByIdAsync(id);
-
-                if (orchPieceDto == null)
-                {
-                    return NotFound();
-                }
-
-                orchPieceDto = _mapper.Map<OrchestralPieceDto>(orchPieceVm);
-                orchPieceDto.Id = id;
-                await _orchPieceService.UpdateAsync(orchPieceDto);
-
-                return Ok(orchPieceDto);
+                return ValidationProblem(ModelState);
             }
-            catch (Exception ex)
-            {
-                return ValidationProblem(ex.Message);
-            }
+
+            await _orchestralPieceService.UpdateAsync(updateDto);
+
+            return Ok();
         }
 
         [HttpDelete("{id}")]
@@ -98,7 +73,7 @@ namespace EOrchestralBriefcase.WebAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteById(int id)
         {
-            await _orchPieceService.DeleteAsync(id);
+            await _orchestralPieceService.DeleteByIdAsync(id);
 
             return NoContent();
         }
