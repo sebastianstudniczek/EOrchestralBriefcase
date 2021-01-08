@@ -1,0 +1,37 @@
+﻿
+@inject IOrchestralBriefcasesService OrchestralBriefcasesService
+
+<div class="row mb-3 pl-3">
+    <div class="card border-primary bg-light col-8 col-sm-9 col-lg-10">
+        <h5 class="pt-2">
+            <a class="card-link"
+               href=@($"orchestralbriefcases/{OrchestralBriefcase.Id}/orchestralpieces")>
+                @OrchestralBriefcase.Name
+            </a>
+        </h5>
+    </div>
+    <div class="col-4 col-sm-3 col-lg-2">
+        <a class="btn btn-warning w-100 mb-1"
+           href="@($"orchestralbriefcases/edit/{OrchestralBriefcase.Id}")">
+            Edytuj
+        </a>
+        <button class="btn btn-danger w-100"
+                @onclick="@(async () => await OnOrchestralBriefcaseDeleted.InvokeAsync())">
+            Usuń
+        </button>
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public OrchestralBriefcaseReadDto OrchestralBriefcase { get; set; }
+
+    [Parameter]
+    public EventCallback OnOrchestralBriefcaseDeleted { get; set; }
+
+    protected async Task OnOrchestralBriefcaseDeleteHander()
+    {
+        await OrchestralBriefcasesService.DeleteByIdAsync(OrchestralBriefcase.Id);
+        await OnOrchestralBriefcaseDeleted.InvokeAsync();
+    }
+}

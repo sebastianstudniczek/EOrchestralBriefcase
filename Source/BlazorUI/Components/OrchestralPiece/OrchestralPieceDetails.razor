@@ -1,0 +1,15 @@
+﻿<div class="card border-primary bg-light col-8 col-sm-9 col-lg-10">
+    <h5 class="pt-2">
+        <a class="card-link">
+            @OrchestralPiece.Title
+        </a>
+    </h5>
+    <div class="card-text">
+        Kompozytor: @(OrchestralPiece.Composer ?? "brak")
+    </div>
+</div>
+
+@code{
+    [Parameter]
+    public OrchestralPieceReadDto OrchestralPiece { get; set; }
+}
