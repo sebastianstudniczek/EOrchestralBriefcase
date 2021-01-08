@@ -11,7 +11,7 @@ namespace EOrchestralBriefcase.Application.Dtos.OrchestralPieces
         public string Composer { get; set; }
         public int? Tempo { get; set; }
         public string SongLink { get; set; }
-        public IList<OrchestralBriefcaseOrchestralPieceDto> OrchestralBriefcasesLinks { get; set; }
+        public IList<OrchestralBriefcaseOrchestralPieceDto> OrchestralBriefcaseLinks { get; set; }
             = new List<OrchestralBriefcaseOrchestralPieceDto>();
     }
 }
