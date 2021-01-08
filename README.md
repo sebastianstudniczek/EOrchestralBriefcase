@@ -2,8 +2,6 @@
 
 An app for storing and managing orchestral briefcases and orchestral piece sheets. The app consist of simple Blazor WebAssembly project as SPA (Single Page Application) UI and ASP .NET Core REST API which UI is calling to. The project was created by following the principles of Clean Architecture.
 
-![sample ui](https://github.com/sebastianstudniczek/EOrchestralBriefcase/blob/main/.github/Images/sample_list.png)
-
 The app was created mainly to satisfy personal needs as i wanted to have all orchestral piece sheets in one place, easily accesible from any device in more organized way.
 
 ## Technologies
@@ -11,7 +9,7 @@ The app was created mainly to satisfy personal needs as i wanted to have all orc
 * .NET Core 3.1 (C# 8)
 * ASP .NET Core 3.1
 * Entity Framework Core 3.1
-* Blazor WebAssembly
+* Blazor WebAssembly (.NET 5)
 * Bootstrap 4
 * AutoMapper 10
 * xUnit 2
