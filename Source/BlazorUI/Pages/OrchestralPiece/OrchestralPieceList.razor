@@ -1,0 +1,33 @@
+﻿@page "/orchestralbriefcases/{id:int}"
+
+<div class="container">
+    <h2 class="mb-4">@OrchestralBriefcaseName</h2>
+    <div class="row justify-content-between pl-3 pr-3">
+        <div class="align-items-end">
+            <a class="btn btn-warning mr-2 mr-sm-4
+                flex-grow-1 flex-md-grow-0" href="@($"orchestralbriefcases/edit/{Id}")">
+                Edytuj teczkę
+            </a>
+        </div>
+    </div>
+    <hr />
+    @if (OrchestralPieces == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        foreach (var orchestralPiece in OrchestralPieces)
+        {
+            <div class="row mb-3 pl-3">
+                <OrchestralPieceDetails OrchestralPiece="orchestralPiece"/>
+                <div class="col-4 col-sm-3 col-lg-2">
+                    <button class="btn btn-danger w-100"
+                            @onclick="@(async () => await OnDeleteOrchestralPieceAsync(orchestralPiece.Id))">
+                        Usuń
+                    </button>
+                </div>
+            </div>
+        }
+    }
+</div>
