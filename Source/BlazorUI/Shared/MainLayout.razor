@@ -1,33 +1,12 @@
 ﻿@using System.ComponentModel
 
 @inherits LayoutComponentBase
-@inject IOrchestralBriefcaseViewModel OrchestralBriefcaseViewModel
-@implements IDisposable
 
-<CascadingValue Value="OrchestralBriefcaseViewModel">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<div class="sidebar">
+    <NavMenu />
+</div>
+<div class="main">
     <div class="container mt-5">
-        <div>
-            @Body
-        </div>
+        @Body
     </div>
-</CascadingValue>
-
-@code{
-    protected override void OnInitialized()
-    {
-        OrchestralBriefcaseViewModel.PropertyChanged += OnPropertyChangedHandler;
-    }
-
-    public void Dispose()
-    {
-        OrchestralBriefcaseViewModel.PropertyChanged -= OnPropertyChangedHandler;
-    }
-
-    public async void OnPropertyChangedHandler(object sender, PropertyChangedEventArgs e)
-    {
-        await InvokeAsync(() => StateHasChanged());
-    }
-}
+</div>
